@@ -1,0 +1,4611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mistvale Tea Co. | Hill-grown tea, honestly made.</title>
+
+  <meta
+    name="description"
+    content="Explore thoughtfully made hill-grown teas from Mistvale Tea Co. Shop tea delivered across India."
+  >
+
+  <link rel="canonical" href="https://mistvale.example/">
+
+  <meta property="og:title" content="Mistvale Tea Co.">
+  <meta
+    property="og:description"
+    content="Hill-grown tea, honestly made."
+  >
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mistvale.example/">
+
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Exactly two font families -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --tea-green: #1f3d2b;
+      --leaf: #4f7942;
+      --cream: #f6f1e7;
+      --parchment: #ebe2cf;
+      --saffron: #d9962b;
+      --ink: #1b1b1b;
+      --error: #b3261e;
+
+      --white: #fffdf8;
+
+      --radius: 12px;
+
+      --container: 1200px;
+
+      --shadow-sm:
+        0 4px 14px rgba(27, 27, 27, .08);
+
+      --shadow-md:
+        0 16px 40px rgba(27, 27, 27, .12);
+    }
+
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    img,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--tea-green);
+      font-family: "Fraunces", serif;
+      line-height: 1.15;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    section {
+      padding: 72px 0;
+    }
+
+    .container {
+      width: min(
+        calc(100% - 32px),
+        var(--container)
+      );
+      margin-inline: auto;
+    }
+
+
+    /* =====================================================
+       ACCESSIBILITY
+    ===================================================== */
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--saffron);
+      outline-offset: 3px;
+    }
+
+
+    /* =====================================================
+       ANNOUNCEMENT
+    ===================================================== */
+
+    .announcement {
+      padding: 8px 16px;
+      background: var(--tea-green);
+      color: var(--cream);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(246, 241, 231, 0.98), rgba(235, 226, 207, 0.96));
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .loader-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0.75;
+      filter: blur(0.2px);
+    }
+
+    .loader-scene svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .loader-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .loader-ring {
+      width: 118px;
+      height: 118px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(31, 61, 43, 0.18);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 12px 32px rgba(31, 61, 43, 0.06);
+    }
+
+    .loader-logo {
+      width: 74px;
+      height: 74px;
+      display: grid;
+      place-items: center;
+    }
+
+    .loader-word {
+      color: var(--tea-green);
+      font-family: "Fraunces", serif;
+      font-size: clamp(28px, 3vw, 38px);
+      letter-spacing: 0.04em;
+    }
+
+    body.loaded .loader-overlay {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--cream);
+      border-bottom: 1px solid rgba(31, 61, 43, .12);
+    }
+
+    .header-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--tea-green);
+      text-decoration: none;
+      font-family: "Fraunces", serif;
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav a {
+      color: var(--tea-green);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav a:hover {
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(31,61,43,.2);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--tea-green);
+      transition:
+        background-color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--parchment);
+      transform: translateY(-2px);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--saffron);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .btn {
+      min-height: 46px;
+      padding: 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      transition:
+        transform 180ms ease,
+        background-color 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease;
+    }
+
+    .btn-primary {
+      background: var(--tea-green);
+      color: var(--cream);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--tea-green);
+      border-color: var(--tea-green);
+    }
+
+    .btn-secondary:hover {
+      background: var(--tea-green);
+      color: var(--cream);
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      padding: 56px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 56px;
+    }
+
+    .eyebrow {
+      margin-bottom: 16px;
+      color: var(--leaf);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      max-width: 650px;
+      font-size: clamp(42px, 6vw, 64px);
+    }
+
+    .hero-copy {
+      max-width: 580px;
+      margin: 24px 0 32px;
+      color: rgba(27,27,27,.76);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+
+    /* =====================================================
+       HERO SVG ART
+    ===================================================== */
+
+    .hero-art {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--parchment);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-art svg {
+      width: 100%;
+      height: 520px;
+    }
+
+
+    /* =====================================================
+       TRUST
+    ===================================================== */
+
+    .trust {
+      padding: 24px 0;
+      background: var(--tea-green);
+      color: var(--cream);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .trust-icon {
+      color: var(--saffron);
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .trust-item strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .trust-item span {
+      color: rgba(246,241,231,.72);
+      font-size: 13px;
+    }
+
+
+    /* =====================================================
+       SECTION HEADINGS
+    ===================================================== */
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(30px, 4vw, 40px);
+    }
+
+    .section-head > p {
+      max-width: 540px;
+      margin: 0;
+      color: rgba(27,27,27,.7);
+    }
+
+
+    /* =====================================================
+       SHOP TOOLBAR
+    ===================================================== */
+
+    .shop-toolbar {
+      margin-bottom: 32px;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: var(--parchment);
+    }
+
+    .toolbar-top {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--tea-green);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid rgba(31,61,43,.22);
+      border-radius: var(--radius);
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      min-height: 40px;
+      padding: 0 15px;
+      border: 1px solid rgba(31,61,43,.2);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--tea-green);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .chip:hover,
+    .chip.active {
+      background: var(--tea-green);
+      color: var(--cream);
+    }
+
+
+    /* =====================================================
+       PRODUCT GRID
+    ===================================================== */
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .product {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(31,61,43,.08);
+      border-radius: var(--radius);
+      background: var(--parchment);
+      transition:
+        transform 200ms ease,
+        box-shadow 200ms ease;
+    }
+
+    .product:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .product-image {
+      position: relative;
+      aspect-ratio: 1;
+      background: var(--cream);
+    }
+
+    .product-image svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .sold-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .product-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .product-category {
+      margin-bottom: 6px;
+      color: var(--leaf);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .product h3 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .product-desc {
+      margin-bottom: 20px;
+      color: rgba(27,27,27,.7);
+      font-size: 14px;
+    }
+
+    .product-bottom {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .price {
+      color: var(--tea-green);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .product-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mini-btn {
+      min-height: 40px;
+      padding: 0 10px;
+      border: 1px solid var(--tea-green);
+      border-radius: var(--radius);
+      background: var(--tea-green);
+      color: var(--cream);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .mini-btn.outline {
+      background: transparent;
+      color: var(--tea-green);
+    }
+
+    .empty-results {
+      grid-column: 1 / -1;
+      padding: 60px 20px;
+      border-radius: var(--radius);
+      background: var(--parchment);
+      text-align: center;
+    }
+
+
+    /* =====================================================
+       DELIVERY
+    ===================================================== */
+
+    .delivery-section {
+      background: var(--parchment);
+    }
+
+    .delivery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .delivery-card {
+      padding: 28px;
+      border-radius: var(--radius);
+      background: var(--cream);
+    }
+
+    .delivery-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+
+    .message {
+      min-height: 24px;
+      margin: 10px 0 0;
+      font-size: 14px;
+    }
+
+    .success {
+      color: var(--leaf);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+
+    /* =====================================================
+       REVIEWS
+    ===================================================== */
+
+    .reviews {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .review {
+      min-height: 190px;
+      padding: 28px;
+      border-radius: var(--radius);
+      background: var(--parchment);
+    }
+
+    .review-mark {
+      color: var(--saffron);
+      font-family: "Fraunces", serif;
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .review blockquote {
+      margin: 14px 0 0;
+      color: rgba(27,27,27,.82);
+      font-family: "Fraunces", serif;
+      font-size: 20px;
+    }
+
+
+    /* =====================================================
+       FAQ
+    ===================================================== */
+
+    .faq-section {
+      background: var(--parchment);
+    }
+
+    .faq {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .faq details {
+      border-top: 1px solid rgba(31,61,43,.18);
+    }
+
+    .faq details:last-child {
+      border-bottom: 1px solid rgba(31,61,43,.18);
+    }
+
+    .faq summary {
+      padding: 22px 0;
+      cursor: pointer;
+      color: var(--tea-green);
+      font-family: "Fraunces", serif;
+      font-size: 21px;
+      font-weight: 600;
+    }
+
+    .faq p {
+      max-width: 780px;
+      padding-bottom: 22px;
+      margin: 0;
+      color: rgba(27,27,27,.7);
+    }
+
+
+    /* =====================================================
+       NEWSLETTER
+    ===================================================== */
+
+    .newsletter {
+      background: var(--tea-green);
+      color: var(--cream);
+    }
+
+    .newsletter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .newsletter h2 {
+      color: var(--cream);
+    }
+
+    .newsletter-copy {
+      color: rgba(246,241,231,.72);
+    }
+
+    .newsletter-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      padding: 52px 0 28px;
+      background: var(--ink);
+      color: var(--cream);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    footer h3 {
+      margin-bottom: 16px;
+      color: var(--cream);
+      font-size: 22px;
+    }
+
+    footer p,
+    footer a {
+      color: rgba(246,241,231,.7);
+      font-size: 14px;
+    }
+
+    footer a {
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--cream);
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      margin-top: 40px;
+      border-top: 1px solid rgba(246,241,231,.15);
+      color: rgba(246,241,231,.55);
+      font-size: 13px;
+    }
+
+
+    /* =====================================================
+       CART
+    ===================================================== */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: none;
+      background: rgba(27,27,27,.48);
+    }
+
+    .overlay.open {
+      display: block;
+    }
+
+    .cart {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 100;
+      width: min(440px, 100%);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+      box-shadow: -12px 0 40px rgba(27,27,27,.16);
+      transform: translateX(100%);
+      transition: transform 250ms ease;
+    }
+
+    .cart.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid rgba(31,61,43,.12);
+    }
+
+    .cart-header h2 {
+      font-size: 28px;
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(31,61,43,.12);
+    }
+
+    .cart-thumb {
+      width: 70px;
+      height: 70px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--parchment);
+    }
+
+    .cart-thumb svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .cart-name {
+      color: var(--tea-green);
+      font-family: "Fraunces", serif;
+      font-weight: 600;
+    }
+
+    .cart-price {
+      font-size: 14px;
+    }
+
+    .quantity {
+      width: max-content;
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      border: 1px solid rgba(31,61,43,.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .quantity button {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      background: transparent;
+      color: var(--tea-green);
+      font-weight: 700;
+    }
+
+    .quantity span {
+      min-width: 32px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .remove {
+      border: 0;
+      background: transparent;
+      color: var(--error);
+      font-size: 13px;
+    }
+
+    .cart-footer {
+      padding: 20px 24px 24px;
+      border-top: 1px solid rgba(31,61,43,.12);
+      background: var(--parchment);
+    }
+
+    .coupon-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .summary {
+      display: grid;
+      gap: 8px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .discount-row {
+      color: var(--leaf);
+    }
+
+    .total-row {
+      padding-top: 14px;
+      margin-top: 8px;
+      border-top: 1px solid rgba(31,61,43,.15);
+      color: var(--tea-green);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .checkout {
+      width: 100%;
+      margin-top: 18px;
+    }
+
+    .empty-cart {
+      padding: 64px 0;
+      text-align: center;
+    }
+
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      place-items: center;
+      padding: 16px;
+      background: rgba(27,27,27,.5);
+    }
+
+    .modal.open {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(760px, 100%);
+      max-height: calc(100dvh - 32px);
+      overflow: auto;
+      border-radius: var(--radius);
+      background: var(--cream);
+      box-shadow: var(--shadow-md);
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .modal-image {
+      min-height: 420px;
+    }
+
+    .modal-image svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .modal-info {
+      padding: 32px;
+    }
+
+    .modal-close {
+      float: right;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(31,61,43,.2);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--tea-green);
+      font-size: 20px;
+    }
+
+    .modal-info h2 {
+      clear: both;
+      padding-top: 24px;
+      font-size: 34px;
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 200;
+      max-width: calc(100% - 32px);
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      background: var(--tea-green);
+      color: var(--cream);
+      box-shadow: var(--shadow-md);
+      transform: translate(-50%, 120px);
+      transition: transform 220ms ease;
+    }
+
+    .toast.show {
+      transform: translate(-50%, 0);
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1050px) {
+
+      .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .trust-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+
+    @media (max-width: 820px) {
+
+      section {
+        padding: 48px 0;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero-grid,
+      .delivery-grid,
+      .newsletter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-art {
+        min-height: 400px;
+      }
+
+      .hero-art svg {
+        height: 400px;
+      }
+
+      .reviews {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-image {
+        min-height: 280px;
+      }
+    }
+
+
+    @media (max-width: 620px) {
+
+      .header-inner {
+        min-height: 68px;
+      }
+
+      .logo {
+        font-size: 22px;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .hero h1 {
+        font-size: clamp(40px, 12vw, 52px);
+      }
+
+      .hero-copy {
+        font-size: 16px;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar-top {
+        grid-template-columns: 1fr;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .product-body {
+        padding: 14px;
+      }
+
+      .product h3 {
+        font-size: 19px;
+      }
+
+      .product-desc {
+        font-size: 13px;
+      }
+
+      .product-bottom {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .product-buttons {
+        width: 100%;
+      }
+
+      .mini-btn {
+        flex: 1;
+      }
+
+      .delivery-row {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-form {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-item {
+        grid-template-columns: 60px 1fr;
+      }
+
+      .cart-thumb {
+        width: 60px;
+        height: 60px;
+      }
+
+      .cart-item > .remove {
+        grid-column: 2;
+        width: max-content;
+      }
+    }
+
+
+    @media (max-width: 380px) {
+
+      .product-grid {
+        gap: 10px;
+      }
+
+      .product-body {
+        padding: 11px;
+      }
+
+      .product h3 {
+        font-size: 17px;
+      }
+
+      .product-desc {
+        font-size: 12px;
+      }
+
+      .price {
+        font-size: 16px;
+      }
+    }
+
+
+    @media (prefers-reduced-motion: reduce) {
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <div class="loader-overlay" id="loader-overlay" aria-live="polite" aria-label="Loading website">
+   <div class="loader-scene" aria-hidden="true">
+     <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+       <g opacity="0.9">
+         <path d="M180 760 C240 670, 270 610, 300 500 C330 385, 350 260, 370 170" fill="none" stroke="#4f7942" stroke-width="4" stroke-linecap="round"/>
+         <path d="M1260 760 C1200 670, 1170 610, 1140 500 C1110 385, 1090 260, 1070 170" fill="none" stroke="#4f7942" stroke-width="4" stroke-linecap="round"/>
+       </g>
+
+       <g opacity="0.8">
+         <path d="M290 560 C220 520, 180 470, 200 410 C240 330, 330 345, 355 420 C370 468, 345 535, 290 560Z" fill="#4f7942"/>
+         <path d="M1150 560 C1220 520, 1260 470, 1240 410 C1200 330, 1110 345, 1085 420 C1070 468, 1095 535, 1150 560Z" fill="#6e9a63"/>
+       </g>
+     </svg>
+   </div>
+
+   <div class="loader-inner">
+     <div class="loader-ring">
+       <div class="loader-logo">
+         <svg viewBox="0 0 40 40" width="72" height="72" aria-hidden="true">
+           <path d="M5 27C12 17 21 12 35 11C32 21 21 29 5 27Z" fill="var(--leaf)" />
+           <path d="M8 31C17 28 23 22 29 15" fill="none" stroke="var(--tea-green)" stroke-width="2" stroke-linecap="round" />
+         </svg>
+       </div>
+     </div>
+     <div class="loader-word">Mistvale</div>
+   </div>
+  </div>
+
+  <!-- =====================================================
+       ANNOUNCEMENT
+  ====================================================== -->
+
+  <div class="announcement">
+    Hill-grown tea, honestly made.
+  </div>
+
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="header">
+
+    <div class="container header-inner">
+
+      <a
+        href="#"
+        class="logo"
+        aria-label="Mistvale home"
+      >
+
+        <span class="logo-mark">
+
+          <svg
+            viewBox="0 0 40 40"
+            width="34"
+            height="34"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 27C12 17 21 12 35 11C32 21 21 29 5 27Z"
+              fill="var(--leaf)"
+            />
+
+            <path
+              d="M8 31C17 28 23 22 29 15"
+              fill="none"
+              stroke="var(--tea-green)"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </span>
+
+        Mistvale
+
+      </a>
+
+
+      <nav
+        class="nav"
+        aria-label="Main navigation"
+      >
+        <a href="#shop">Shop</a>
+        <a href="#delivery">Delivery</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+
+      <div class="header-actions">
+
+        <button
+          class="icon-btn"
+          id="search-button"
+          type="button"
+          aria-label="Search teas"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-4-4"></path>
+          </svg>
+        </button>
+
+
+        <button
+          class="icon-btn"
+          id="cart-button"
+          type="button"
+          aria-label="Open cart"
+        >
+
+          <svg
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M6 8h12l1 12H5L6 8Z"></path>
+            <path d="M9 8a3 3 0 0 1 6 0"></path>
+          </svg>
+
+          <span
+            class="cart-count"
+            id="cart-count"
+          >
+            0
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+
+    <!-- ===================================================
+         HERO
+    ==================================================== -->
+
+    <section class="hero">
+
+      <div class="container hero-grid">
+
+        <div>
+
+          <p class="eyebrow">
+            Tea from the hills
+          </p>
+
+          <h1>
+            Hill-grown tea,
+            honestly made.
+          </h1>
+
+          <p class="hero-copy">
+            Thoughtfully selected teas for quiet mornings,
+            slow afternoons and thoughtful gifts.
+          </p>
+
+          <div class="hero-actions">
+
+            <a
+              href="#shop"
+              class="btn btn-primary"
+            >
+              Shop the teas
+            </a>
+
+            <a
+              href="#faq"
+              class="btn btn-secondary"
+            >
+              Learn more
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <!-- INLINE HERO IMAGE -->
+        <div
+          class="hero-art"
+          aria-label="Illustration of Mistvale tea garden"
+        >
+
+          <svg
+            viewBox="0 0 700 520"
+            role="img"
+            aria-labelledby="hero-title"
+          >
+
+            <title id="hero-title">
+              Mistvale tea garden
+            </title>
+
+            <rect
+              width="700"
+              height="520"
+              fill="var(--parchment)"
+            />
+
+            <!-- sky -->
+            <circle
+              cx="530"
+              cy="120"
+              r="58"
+              fill="var(--saffron)"
+              opacity=".7"
+            />
+
+            <!-- distant hill -->
+            <path
+              d="M0 310
+                 C100 220 170 270 260 200
+                 C350 130 430 230 520 175
+                 C600 125 650 170 700 120
+                 L700 520
+                 L0 520Z"
+              fill="var(--leaf)"
+              opacity=".65"
+            />
+
+            <!-- front hill -->
+            <path
+              d="M0 370
+                 C100 290 180 360 280 280
+                 C390 195 460 330 560 250
+                 C620 205 665 240 700 215
+                 L700 520
+                 L0 520Z"
+              fill="var(--tea-green)"
+            />
+
+            <!-- tea plants -->
+            <g
+              fill="var(--leaf)"
+              stroke="var(--tea-green)"
+              stroke-width="3"
+            >
+
+              <circle cx="90" cy="380" r="32"/>
+              <circle cx="135" cy="360" r="38"/>
+              <circle cx="180" cy="382" r="31"/>
+
+              <circle cx="500" cy="390" r="35"/>
+              <circle cx="550" cy="360" r="42"/>
+              <circle cx="605" cy="385" r="32"/>
+
+            </g>
+
+
+            <!-- tea pack -->
+            <rect
+              x="260"
+              y="150"
+              width="180"
+              height="270"
+              rx="12"
+              fill="var(--tea-green)"
+            />
+
+            <rect
+              x="280"
+              y="210"
+              width="140"
+              height="105"
+              rx="8"
+              fill="var(--cream)"
+            />
+
+            <circle
+              cx="350"
+              cy="262"
+              r="27"
+              fill="var(--leaf)"
+            />
+
+            <text
+              x="350"
+              y="185"
+              text-anchor="middle"
+              fill="var(--cream)"
+              font-family="Georgia, serif"
+              font-size="25"
+            >
+              Mistvale
+            </text>
+
+            <text
+              x="350"
+              y="345"
+              text-anchor="middle"
+              fill="var(--cream)"
+              font-family="Arial, sans-serif"
+              font-size="13"
+            >
+              Hill-grown tea
+            </text>
+
+          </svg>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         TRUST
+    ==================================================== -->
+
+    <div class="trust">
+
+      <div class="container trust-grid">
+
+        <div class="trust-item">
+          <div class="trust-icon">✓</div>
+          <div>
+            <strong>7-day returns</strong>
+            <span>For unopened packs</span>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">✓</div>
+          <div>
+            <strong>India delivery</strong>
+            <span>2 to 5 working days</span>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">✓</div>
+          <div>
+            <strong>GST included</strong>
+            <span>Prices include GST</span>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">✓</div>
+          <div>
+            <strong>Carefully made</strong>
+            <span>Simple and honest tea</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         SHOP
+    ==================================================== -->
+
+    <section id="shop">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              Explore the collection
+            </p>
+
+            <h2>
+              Shop the teas
+            </h2>
+
+          </div>
+
+          <p>
+            Find a tea for your morning cup,
+            a quiet afternoon or a thoughtful gift.
+          </p>
+
+        </div>
+
+
+        <div class="shop-toolbar">
+
+          <div class="toolbar-top">
+
+            <div class="field">
+
+              <label for="search">
+                Search teas
+              </label>
+
+              <input
+                id="search"
+                type="search"
+                placeholder="Search tea..."
+                autocomplete="off"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="sort">
+                Sort
+              </label>
+
+              <select id="sort">
+
+                <option value="featured">
+                  Featured
+                </option>
+
+                <option value="price-low">
+                  Price: low to high
+                </option>
+
+                <option value="price-high">
+                  Price: high to low
+                </option>
+
+                <option value="name">
+                  Name
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="chips"
+            id="categories"
+          ></div>
+
+        </div>
+
+
+        <div
+          class="product-grid"
+          id="products"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         DELIVERY
+    ==================================================== -->
+
+    <section
+      class="delivery-section"
+      id="delivery"
+    >
+
+      <div class="container delivery-grid">
+
+        <div>
+
+          <p class="eyebrow">
+            Delivery check
+          </p>
+
+          <h2>
+            Check delivery to your pincode.
+          </h2>
+
+          <p>
+            Enter your 6-digit pincode to check
+            delivery availability and time.
+          </p>
+
+        </div>
+
+
+        <div class="delivery-card">
+
+          <form id="delivery-form">
+
+            <div class="field">
+
+              <label for="pincode">
+                Pincode
+              </label>
+
+              <div class="delivery-row">
+
+                <input
+                  id="pincode"
+                  inputmode="numeric"
+                  maxlength="6"
+                  placeholder="734001"
+                  autocomplete="postal-code"
+                >
+
+                <button
+                  class="btn btn-primary"
+                  id="delivery-submit"
+                  type="submit"
+                >
+                  Check
+                </button>
+
+              </div>
+
+              <p
+                id="delivery-message"
+                class="message"
+                aria-live="polite"
+              ></p>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         REVIEWS
+    ==================================================== -->
+
+    <section id="reviews">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              From tea lovers
+            </p>
+
+            <h2>
+              What tea lovers say
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <!--
+          IMPORTANT:
+          Replace these three blocks with the exact
+          three reviews from the original index.html.
+          Do NOT invent reviews for the real submission.
+        -->
+
+        <div class="reviews">
+
+          <article class="review">
+
+            <div class="review-mark">
+              “
+            </div>
+
+            <blockquote>
+              Approved review from the original store.
+            </blockquote>
+
+          </article>
+
+
+          <article class="review">
+
+            <div class="review-mark">
+              “
+            </div>
+
+            <blockquote>
+              Approved review from the original store.
+            </blockquote>
+
+          </article>
+
+
+          <article class="review">
+
+            <div class="review-mark">
+              “
+            </div>
+
+            <blockquote>
+              Approved review from the original store.
+            </blockquote>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         FAQ
+    ==================================================== -->
+
+    <section
+      class="faq-section"
+      id="faq"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              Need to know
+            </p>
+
+            <h2>
+              Frequently asked questions
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="faq">
+
+          <details>
+
+            <summary>
+              How long does delivery take?
+            </summary>
+
+            <p>
+              2 to 5 working days depending on your pincode.
+              Use the delivery check to see yours.
+            </p>
+
+          </details>
+
+
+          <details>
+
+            <summary>
+              Can I return tea?
+            </summary>
+
+            <p>
+              Unopened packs can be returned within 7 days of
+              delivery. Opened tea cannot be returned for hygiene reasons.
+            </p>
+
+          </details>
+
+
+          <details>
+
+            <summary>
+              How should I store my tea?
+            </summary>
+
+            <p>
+              In an airtight container, away from light,
+              heat and strong smells. It tastes best within
+              6 months of opening.
+            </p>
+
+          </details>
+
+
+          <details>
+
+            <summary>
+              Is Chamomile & Tulsi caffeine-free?
+            </summary>
+
+            <p>
+              Yes, it is a caffeine-free herbal blend.
+            </p>
+
+          </details>
+
+
+          <details>
+
+            <summary>
+              Do you ship outside India?
+            </summary>
+
+            <p>
+              Not yet. We currently deliver within India only.
+            </p>
+
+          </details>
+
+
+          <details>
+
+            <summary>
+              Can I send tea as a gift?
+            </summary>
+
+            <p>
+              Yes. The Tea Lover's Sampler comes in a wooden
+              gift box with a brewing guide.
+            </p>
+
+          </details>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         NEWSLETTER
+    ==================================================== -->
+
+    <section class="newsletter">
+
+      <div class="container newsletter-grid">
+
+        <div>
+
+          <p class="eyebrow">
+            Stay close to the tea
+          </p>
+
+          <h2>
+            A little tea in your inbox.
+          </h2>
+
+          <p class="newsletter-copy">
+            Receive occasional notes from Mistvale.
+          </p>
+
+        </div>
+
+
+        <form
+          class="newsletter-form"
+          id="newsletter-form"
+        >
+
+          <label
+            class="sr-only"
+            for="email"
+          >
+            Email address
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="Your email address"
+            autocomplete="email"
+            required
+          >
+
+          <button
+            class="btn btn-primary"
+            type="submit"
+          >
+            Subscribe
+          </button>
+
+        </form>
+
+      </div>
+
+      <div class="container">
+
+        <p
+          id="newsletter-message"
+          class="message"
+          aria-live="polite"
+        ></p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer>
+
+    <div class="container footer-grid">
+
+      <div>
+
+        <h3>
+          Mistvale
+        </h3>
+
+        <p>
+          Hill-grown tea, honestly made.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          Contact
+        </h3>
+
+        <p>
+          14 Hill Cart Road,<br>
+          Siliguri, West Bengal 734001,<br>
+          India
+        </p>
+
+        <p>
+          <a href="tel:+919000012345">
+            +91 90000 12345
+          </a>
+        </p>
+
+        <p>
+          <a href="mailto:hello@mistvale.example">
+            hello@mistvale.example
+          </a>
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          Online
+        </h3>
+
+        <p>
+          <a href="https://mistvale.example">
+            Website
+          </a>
+        </p>
+
+        <p>
+          <a href="https://instagram.com/mistvale.example">
+            Instagram
+          </a>
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="container footer-bottom">
+
+      © 2019 Mistvale Tea Co. All rights reserved.
+
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       CART OVERLAY
+  ====================================================== -->
+
+  <div
+    class="overlay"
+    id="overlay"
+  ></div>
+
+
+  <!-- =====================================================
+       CART
+  ====================================================== -->
+
+  <aside
+    class="cart"
+    id="cart"
+    aria-label="Shopping cart"
+    aria-hidden="true"
+  >
+
+    <div class="cart-header">
+
+      <h2>
+        Your cart
+      </h2>
+
+      <button
+        class="icon-btn"
+        id="close-cart"
+        type="button"
+        aria-label="Close cart"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="cart-body"
+      id="cart-body"
+    ></div>
+
+
+    <div
+      class="cart-footer"
+      id="cart-footer"
+    ></div>
+
+  </aside>
+
+
+  <!-- =====================================================
+       QUICK VIEW
+  ====================================================== -->
+
+  <div
+    class="modal"
+    id="modal"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <div class="modal-card">
+
+      <div class="modal-grid">
+
+        <div
+          class="modal-image"
+          id="modal-image"
+        ></div>
+
+
+        <div class="modal-info">
+
+          <button
+            class="modal-close"
+            id="close-modal"
+            type="button"
+            aria-label="Close"
+          >
+            ×
+          </button>
+
+          <p
+            class="eyebrow"
+            id="modal-category"
+          ></p>
+
+          <h2 id="modal-title"></h2>
+
+          <p id="modal-description"></p>
+
+          <p
+            class="price"
+            id="modal-price"
+          ></p>
+
+          <button
+            class="btn btn-primary"
+            id="modal-add"
+            type="button"
+          >
+            Add to cart
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TOAST
+  ====================================================== -->
+
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+
+  <!-- =====================================================
+       CHECKOUT CONTRACT
+  ====================================================== -->
+
+  <form
+    id="checkout-form"
+    action="https://mistvale.example/cart/checkout"
+    method="POST"
+    hidden
+  >
+
+    <input
+      type="hidden"
+      name="items"
+      id="checkout-items"
+    >
+
+    <input
+      type="hidden"
+      name="coupon"
+      id="checkout-coupon"
+    >
+
+  </form>
+
+
+  <!-- =====================================================
+       JSON-LD
+  ====================================================== -->
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Mistvale Tea Co.",
+    "url": "https://mistvale.example",
+    "telephone": "+91 90000 12345",
+    "email": "hello@mistvale.example",
+    "foundingDate": "2019",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "14 Hill Cart Road",
+      "addressLocality": "Siliguri",
+      "addressRegion": "West Bengal",
+      "postalCode": "734001",
+      "addressCountry": "IN"
+    }
+  }
+  </script>
+
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How long does delivery take?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2 to 5 working days depending on your pincode. Use the delivery check to see yours."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I return tea?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unopened packs can be returned within 7 days of delivery. Opened tea cannot be returned for hygiene reasons."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How should I store my tea?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In an airtight container, away from light, heat and strong smells. It tastes best within 6 months of opening."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Chamomile & Tulsi caffeine-free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, it is a caffeine-free herbal blend."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you ship outside India?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not yet. We currently deliver within India only."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I send tea as a gift?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The Tea Lover's Sampler comes in a wooden gift box with a brewing guide."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loader = document.getElementById("loader-overlay");
+
+      if (window.gsap) {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const loaderTimeline = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+        loaderTimeline
+          .from(".loader-ring", {
+            scale: 0.65,
+            opacity: 0,
+            duration: 0.5
+          })
+          .from(".loader-logo", {
+            scale: 0.8,
+            opacity: 0,
+            y: 16,
+            duration: 0.45
+          }, "-=0.2")
+          .from(".loader-word", {
+            y: 20,
+            opacity: 0,
+            duration: 0.45
+          }, "-=0.2")
+          .to(loader, {
+            autoAlpha: 0,
+            duration: 0.65,
+            delay: 0.7,
+            onComplete: () => {
+              loader.classList.add("hidden");
+              document.body.classList.add("loaded");
+            }
+          });
+
+        gsap.from(".eyebrow", {
+          opacity: 0,
+          y: 24,
+          duration: 0.7,
+          ease: "power3.out"
+        });
+
+        gsap.from(".hero h1", {
+          opacity: 0,
+          y: 32,
+          duration: 0.8,
+          delay: 0.15,
+          ease: "power3.out"
+        });
+
+        gsap.from(".hero-copy", {
+          opacity: 0,
+          y: 26,
+          duration: 0.8,
+          delay: 0.35,
+          ease: "power3.out"
+        });
+
+        gsap.from(".hero-actions a", {
+          opacity: 0,
+          y: 18,
+          duration: 0.6,
+          delay: 0.5,
+          stagger: 0.12,
+          ease: "power2.out"
+        });
+
+        gsap.from(".hero-art", {
+          opacity: 0,
+          scale: 0.94,
+          duration: 1,
+          delay: 0.7,
+          ease: "power3.out"
+        });
+
+        const initProductScrollAnimation = () => {
+          const cards = document.querySelectorAll(".product");
+
+          if (!cards.length) return;
+
+          gsap.utils.toArray(".product").forEach((card, index) => {
+            gsap.fromTo(
+              card,
+              {
+                opacity: 0,
+                y: 40,
+                scale: 0.96,
+                rotateX: 10
+              },
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                rotateX: 0,
+                duration: 0.8,
+                delay: index * 0.08,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top 82%",
+                  once: true
+                }
+              }
+            );
+          });
+        };
+
+        initProductScrollAnimation();
+
+        const observer = new MutationObserver(() => {
+          initProductScrollAnimation();
+          ScrollTrigger.getAll().forEach(trigger => trigger.refresh());
+        });
+
+        const productsContainer = document.getElementById("products");
+        if (productsContainer) {
+          observer.observe(productsContainer, {
+            childList: true,
+            subtree: true
+          });
+        }
+      } else {
+        setTimeout(() => {
+          if (loader) {
+            loader.classList.add("hidden");
+            document.body.classList.add("loaded");
+          }
+        }, 2800);
+      }
+    });
+  </script>
+
+  <script>
+
+    /* =====================================================
+       PRODUCTS
+       
+       IMPORTANT:
+       Replace ONLY this demo array with the original
+       PRODUCTS from your assessment index.html.
+       Do not change original id/name/price.
+    ===================================================== */
+
+    const PRODUCTS = [
+
+      {
+        id: 101,
+        name: "Assam Black Tea",
+        price: 499,
+        category: "Black",
+        description: "Malty Assam leaves for your morning cup.",
+        stock: 12
+      },
+
+      {
+        id: 102,
+        name: "Darjeeling Tea",
+        price: 599,
+        category: "Black",
+        description: "A delicate tea for slow afternoons.",
+        stock: 8
+      },
+
+      {
+        id: 103,
+        name: "Green Tea",
+        price: 449,
+        category: "Green",
+        description: "A clean and gentle everyday green tea.",
+        stock: 15
+      },
+
+      {
+        id: 104,
+        name: "Chamomile & Tulsi",
+        price: 399,
+        category: "Herbal",
+        description: "A caffeine-free herbal blend.",
+        stock: 10
+      },
+
+      {
+        id: 105,
+        name: "Masala Chai",
+        price: 549,
+        category: "Black",
+        description: "A warm blend for a familiar cup.",
+        stock: 6
+      },
+
+      {
+        id: 106,
+        name: "Himalayan Green Tea",
+        price: 649,
+        category: "Green",
+        description: "Fresh green tea inspired by mountain mornings.",
+        stock: 7
+      },
+
+      {
+        id: 107,
+        name: "Tea Lover's Sampler",
+        price: 899,
+        category: "Gifts",
+        description: "A tea sampler in a wooden gift box.",
+        stock: 5
+      },
+
+      {
+        id: 108,
+        name: "Morning Breakfast Tea",
+        price: 499,
+        category: "Black",
+        description: "A balanced everyday breakfast tea.",
+        stock: 0
+      }
+
+    ];
+
+
+    /* =====================================================
+       API
+       
+       IMPORTANT:
+       Replace this with the ORIGINAL API object from
+       your assessment. Do not modify the original API.
+    ===================================================== */
+
+    const API = {
+
+      async checkPincode(pincode) {
+
+        await new Promise(
+          resolve => setTimeout(resolve, 700)
+        );
+
+        if (pincode === "000000") {
+
+          return {
+            serviceable: false
+          };
+
+        }
+
+        if (pincode === "999999") {
+
+          throw new Error(
+            "Delivery service unavailable"
+          );
+
+        }
+
+        return {
+          serviceable: true,
+          days: "2 to 5"
+        };
+
+      }
+
+    };
+
+
+    /* =====================================================
+       STATE
+    ===================================================== */
+
+    const state = {
+
+      cart: loadCart(),
+
+      category: "All",
+
+      search: "",
+
+      sort: "featured",
+
+      coupon: ""
+
+    };
+
+
+    let quickViewId = null;
+
+
+    /* =====================================================
+       HELPERS
+    ===================================================== */
+
+    function money(value) {
+
+      return new Intl.NumberFormat(
+        "en-IN",
+        {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0
+        }
+      ).format(value);
+
+    }
+
+
+    function productById(id) {
+
+      return PRODUCTS.find(
+        product =>
+          Number(product.id) === Number(id)
+      );
+
+    }
+
+
+    function maxQty(product) {
+
+      return Math.min(
+        5,
+        Math.max(
+          0,
+          Number(product.stock) || 0
+        )
+      );
+
+    }
+
+
+    function toast(message) {
+
+      const element =
+        document.getElementById("toast");
+
+      element.textContent = message;
+
+      element.classList.add("show");
+
+      clearTimeout(toast.timer);
+
+      toast.timer = setTimeout(
+        () => element.classList.remove("show"),
+        2300
+      );
+
+    }
+
+
+    function escapeHTML(value) {
+
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =====================================================
+       INLINE PRODUCT IMAGE
+       
+       No external image files required.
+    ===================================================== */
+
+    function productSVG(product) {
+
+      const colorMap = {
+
+        Black: "var(--tea-green)",
+
+        Green: "var(--leaf)",
+
+        Herbal: "var(--saffron)",
+
+        Gifts: "var(--tea-green)"
+
+      };
+
+
+      const color =
+        colorMap[product.category] ||
+        "var(--tea-green)";
+
+
+      const name =
+        escapeHTML(product.name);
+
+
+      return `
+
+        <svg
+          viewBox="0 0 500 500"
+          role="img"
+          aria-label="${name}"
+        >
+
+          <rect
+            width="500"
+            height="500"
+            fill="var(--cream)"
+          />
+
+          <circle
+            cx="400"
+            cy="95"
+            r="45"
+            fill="var(--saffron)"
+            opacity=".5"
+          />
+
+          <path
+            d="M0 390
+               C100 310 170 370 250 300
+               C340 220 410 330 500 255
+               L500 500
+               L0 500Z"
+            fill="var(--parchment)"
+          />
+
+          <rect
+            x="150"
+            y="80"
+            width="200"
+            height="310"
+            rx="14"
+            fill="${color}"
+          />
+
+          <rect
+            x="172"
+            y="160"
+            width="156"
+            height="120"
+            rx="8"
+            fill="var(--cream)"
+          />
+
+          <circle
+            cx="250"
+            cy="220"
+            r="34"
+            fill="var(--leaf)"
+          />
+
+          <path
+            d="M230 220
+               C242 201 260 193 278 195
+               C272 217 253 232 230 220Z"
+            fill="var(--tea-green)"
+          />
+
+          <text
+            x="250"
+            y="130"
+            text-anchor="middle"
+            fill="var(--cream)"
+            font-family="Georgia, serif"
+            font-size="28"
+          >
+            Mistvale
+          </text>
+
+          <text
+            x="250"
+            y="320"
+            text-anchor="middle"
+            fill="var(--cream)"
+            font-family="Arial, sans-serif"
+            font-size="15"
+          >
+            ${escapeHTML(product.category)} tea
+          </text>
+
+        </svg>
+
+      `;
+
+    }
+
+
+    /* =====================================================
+       LOCAL STORAGE
+    ===================================================== */
+
+    function loadCart() {
+
+      try {
+
+        const saved =
+          localStorage.getItem(
+            "mistvale-cart"
+          );
+
+        if (!saved) {
+          return [];
+        }
+
+        const parsed =
+          JSON.parse(saved);
+
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+
+        return parsed
+          .map(item => ({
+            id: Number(item.id),
+            qty: Number(item.qty)
+          }))
+          .filter(item => {
+
+            const product =
+              productById(item.id);
+
+            return (
+              product &&
+              product.stock > 0 &&
+              item.qty > 0
+            );
+
+          })
+          .map(item => {
+
+            const product =
+              productById(item.id);
+
+            return {
+              id: item.id,
+              qty: Math.min(
+                item.qty,
+                maxQty(product)
+              )
+            };
+
+          });
+
+      } catch {
+
+        return [];
+
+      }
+
+    }
+
+
+    function saveCart() {
+
+      localStorage.setItem(
+        "mistvale-cart",
+        JSON.stringify(state.cart)
+      );
+
+    }
+
+
+    /* =====================================================
+       CART MATHS
+    ===================================================== */
+
+    function subtotal() {
+
+      return state.cart.reduce(
+        (sum, item) => {
+
+          const product =
+            productById(item.id);
+
+          if (!product) {
+            return sum;
+          }
+
+          return sum +
+            product.price * item.qty;
+
+        },
+        0
+      );
+
+    }
+
+
+    function eligibleSubtotal() {
+
+      return state.cart.reduce(
+        (sum, item) => {
+
+          const product =
+            productById(item.id);
+
+          if (!product) {
+            return sum;
+          }
+
+          if (product.category === "Gifts") {
+            return sum;
+          }
+
+          return sum +
+            product.price * item.qty;
+
+        },
+        0
+      );
+
+    }
+
+
+    function discount() {
+
+      if (state.coupon !== "WELCOME10") {
+        return 0;
+      }
+
+      const sub =
+        subtotal();
+
+      if (sub < 399) {
+        return 0;
+      }
+
+      return Math.min(
+        eligibleSubtotal() * .10,
+        150
+      );
+
+    }
+
+
+    function shipping() {
+
+      if (subtotal() <= 0) {
+        return 0;
+      }
+
+      const afterDiscount =
+        subtotal() - discount();
+
+      return afterDiscount >= 399
+        ? 0
+        : 49;
+
+    }
+
+
+    function total() {
+
+      return Math.round(
+        subtotal()
+        - discount()
+        + shipping()
+      );
+
+    }
+
+
+    /* =====================================================
+       CATEGORIES
+    ===================================================== */
+
+    function renderCategories() {
+
+      const categories =
+        [
+          "All",
+          ...new Set(
+            PRODUCTS.map(
+              product => product.category
+            )
+          )
+        ];
+
+
+      document.getElementById(
+        "categories"
+      ).innerHTML =
+
+        categories.map(category => `
+
+          <button
+            type="button"
+            class="chip ${
+              state.category === category
+                ? "active"
+                : ""
+            }"
+            data-category="${escapeHTML(category)}"
+            aria-pressed="${
+              state.category === category
+            }"
+          >
+            ${escapeHTML(category)}
+          </button>
+
+        `).join("");
+
+    }
+
+
+    /* =====================================================
+       FILTER / SORT
+    ===================================================== */
+
+    function visibleProducts() {
+
+      let result =
+        [...PRODUCTS];
+
+
+      if (state.category !== "All") {
+
+        result =
+          result.filter(
+            product =>
+              product.category ===
+              state.category
+          );
+
+      }
+
+
+      const query =
+        state.search
+          .trim()
+          .toLowerCase();
+
+
+      if (query) {
+
+        result =
+          result.filter(product => {
+
+            const searchable = [
+
+              product.name,
+
+              product.category,
+
+              product.description
+
+            ]
+              .join(" ")
+              .toLowerCase();
+
+            return searchable.includes(
+              query
+            );
+
+          });
+
+      }
+
+
+      result.sort((a, b) => {
+
+        const aSold =
+          Number(a.stock) <= 0;
+
+        const bSold =
+          Number(b.stock) <= 0;
+
+
+        if (aSold && !bSold) {
+          return 1;
+        }
+
+        if (!aSold && bSold) {
+          return -1;
+        }
+
+
+        if (state.sort === "price-low") {
+          return a.price - b.price;
+        }
+
+
+        if (state.sort === "price-high") {
+          return b.price - a.price;
+        }
+
+
+        if (state.sort === "name") {
+          return a.name.localeCompare(
+            b.name
+          );
+        }
+
+
+        return a.id - b.id;
+
+      });
+
+
+      return result;
+
+    }
+
+
+    /* =====================================================
+       PRODUCTS
+    ===================================================== */
+
+    function renderProducts() {
+
+      const container =
+        document.getElementById(
+          "products"
+        );
+
+
+      const products =
+        visibleProducts();
+
+
+      if (!products.length) {
+
+        container.innerHTML = `
+
+          <div class="empty-results">
+
+            <h3>
+              No teas found
+            </h3>
+
+            <p>
+              Try another search or category.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      container.innerHTML =
+        products.map(product => {
+
+          const sold =
+            Number(product.stock) <= 0;
+
+
+          return `
+
+            <article class="product">
+
+              <div class="product-image">
+
+                ${productSVG(product)}
+
+                ${
+                  sold
+                    ? `
+                      <span class="sold-badge">
+                        Sold out
+                      </span>
+                    `
+                    : ""
+                }
+
+              </div>
+
+
+              <div class="product-body">
+
+                <div class="product-category">
+                  ${escapeHTML(product.category)}
+                </div>
+
+                <h3>
+                  ${escapeHTML(product.name)}
+                </h3>
+
+                <p class="product-desc">
+                  ${escapeHTML(product.description)}
+                </p>
+
+
+                <div class="product-bottom">
+
+                  <span class="price">
+                    ${money(product.price)}
+                  </span>
+
+
+                  <div class="product-buttons">
+
+                    <button
+                      type="button"
+                      class="mini-btn outline"
+                      data-view="${product.id}"
+                    >
+                      View
+                    </button>
+
+
+                    <button
+                      type="button"
+                      class="mini-btn"
+                      data-add="${product.id}"
+                      ${sold ? "disabled" : ""}
+                    >
+                      ${sold ? "Sold out" : "Add"}
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("");
+
+    }
+
+
+    /* =====================================================
+       ADD CART
+    ===================================================== */
+
+    function addToCart(id) {
+
+      const product =
+        productById(id);
+
+
+      if (!product) {
+        return;
+      }
+
+
+      if (Number(product.stock) <= 0) {
+
+        toast(
+          "This tea is sold out."
+        );
+
+        return;
+
+      }
+
+
+      const max =
+        maxQty(product);
+
+
+      const existing =
+        state.cart.find(
+          item =>
+            Number(item.id) ===
+            Number(id)
+        );
+
+
+      if (existing) {
+
+        if (existing.qty >= max) {
+
+          toast(
+            `Maximum ${max} packs allowed.`
+          );
+
+          return;
+
+        }
+
+        existing.qty++;
+
+      } else {
+
+        state.cart.push({
+          id: product.id,
+          qty: 1
+        });
+
+      }
+
+
+      saveCart();
+
+      renderCart();
+
+      updateCartCount();
+
+      toast(
+        `${product.name} added to cart.`
+      );
+
+    }
+
+
+    /* =====================================================
+       REMOVE
+    ===================================================== */
+
+    function removeFromCart(id) {
+
+      state.cart =
+        state.cart.filter(
+          item =>
+            Number(item.id) !==
+            Number(id)
+        );
+
+      saveCart();
+
+      renderCart();
+
+      updateCartCount();
+
+    }
+
+
+    /* =====================================================
+       QUANTITY
+    ===================================================== */
+
+    function changeQuantity(
+      id,
+      change
+    ) {
+
+      const item =
+        state.cart.find(
+          item =>
+            Number(item.id) ===
+            Number(id)
+        );
+
+
+      const product =
+        productById(id);
+
+
+      if (!item || !product) {
+        return;
+      }
+
+
+      const next =
+        item.qty + change;
+
+
+      if (next <= 0) {
+
+        removeFromCart(id);
+
+        return;
+
+      }
+
+
+      item.qty =
+        Math.min(
+          next,
+          maxQty(product)
+        );
+
+
+      saveCart();
+
+      renderCart();
+
+      updateCartCount();
+
+    }
+
+
+    /* =====================================================
+       CART COUNT
+    ===================================================== */
+
+    function updateCartCount() {
+
+      const count =
+        state.cart.reduce(
+          (sum, item) =>
+            sum + item.qty,
+          0
+        );
+
+
+      document.getElementById(
+        "cart-count"
+      ).textContent = count;
+
+    }
+
+
+    /* =====================================================
+       CART RENDER
+    ===================================================== */
+
+    function renderCart() {
+
+      const body =
+        document.getElementById(
+          "cart-body"
+        );
+
+
+      const footer =
+        document.getElementById(
+          "cart-footer"
+        );
+
+
+      if (!state.cart.length) {
+
+        body.innerHTML = `
+
+          <div class="empty-cart">
+
+            <h3>
+              Your cart is empty
+            </h3>
+
+            <p>
+              Add a tea to get started.
+            </p>
+
+            <button
+              class="btn btn-primary"
+              id="cart-shop"
+              type="button"
+            >
+              Shop the teas
+            </button>
+
+          </div>
+
+        `;
+
+        footer.innerHTML = "";
+
+        return;
+
+      }
+
+
+      body.innerHTML =
+        state.cart.map(item => {
+
+          const product =
+            productById(item.id);
+
+
+          if (!product) {
+            return "";
+          }
+
+
+          return `
+
+            <div class="cart-item">
+
+              <div class="cart-thumb">
+
+                ${productSVG(product)}
+
+              </div>
+
+
+              <div>
+
+                <div class="cart-name">
+                  ${escapeHTML(product.name)}
+                </div>
+
+                <div class="cart-price">
+                  ${money(product.price)}
+                </div>
+
+
+                <div class="quantity">
+
+                  <button
+                    type="button"
+                    data-minus="${product.id}"
+                    aria-label="Decrease quantity"
+                  >
+                    −
+                  </button>
+
+                  <span>
+                    ${item.qty}
+                  </span>
+
+                  <button
+                    type="button"
+                    data-plus="${product.id}"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <button
+                class="remove"
+                type="button"
+                data-remove="${product.id}"
+              >
+                Remove
+              </button>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+
+      footer.innerHTML = `
+
+        <div class="field">
+
+          <label for="coupon">
+            Coupon code
+          </label>
+
+          <div class="coupon-row">
+
+            <input
+              id="coupon"
+              type="text"
+              value="${state.coupon}"
+              placeholder="WELCOME10"
+            >
+
+            <button
+              class="btn btn-secondary"
+              type="button"
+              id="apply-coupon"
+            >
+              Apply
+            </button>
+
+          </div>
+
+          <p
+            id="coupon-message"
+            class="message"
+          ></p>
+
+        </div>
+
+
+        <div class="summary">
+
+          <div class="summary-row">
+
+            <span>
+              Subtotal
+            </span>
+
+            <strong>
+              ${money(subtotal())}
+            </strong>
+
+          </div>
+
+
+          <div class="summary-row discount-row">
+
+            <span>
+              Discount
+            </span>
+
+            <strong>
+              ${
+                discount()
+                  ? "-" + money(discount())
+                  : money(0)
+              }
+            </strong>
+
+          </div>
+
+
+          <div class="summary-row">
+
+            <span>
+              Shipping
+            </span>
+
+            <strong>
+              ${
+                shipping() === 0
+                  ? "Free"
+                  : money(shipping())
+              }
+            </strong>
+
+          </div>
+
+
+          <div class="summary-row total-row">
+
+            <span>
+              Total
+            </span>
+
+            <strong>
+              ${money(total())}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary checkout"
+          id="checkout"
+          type="button"
+        >
+          Checkout
+        </button>
+
+      `;
+
+    }
+
+
+    /* =====================================================
+       COUPON
+    ===================================================== */
+
+    function applyCoupon() {
+
+      const input =
+        document.getElementById(
+          "coupon"
+        );
+
+
+      const message =
+        document.getElementById(
+          "coupon-message"
+        );
+
+
+      if (!input) {
+        return;
+      }
+
+
+      const code =
+        input.value
+          .trim()
+          .toUpperCase();
+
+
+      if (!code) {
+
+        state.coupon = "";
+
+        renderCart();
+
+        return;
+
+      }
+
+
+      if (code !== "WELCOME10") {
+
+        state.coupon = "";
+
+        message.textContent =
+          "Invalid coupon code.";
+
+        message.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      if (subtotal() < 399) {
+
+        state.coupon = "";
+
+        message.textContent =
+          "WELCOME10 requires a cart subtotal of ₹399 or more.";
+
+        message.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      state.coupon =
+        "WELCOME10";
+
+
+      renderCart();
+
+      toast(
+        "WELCOME10 applied."
+      );
+
+    }
+
+
+    /* =====================================================
+       CART OPEN
+    ===================================================== */
+
+    function openCart() {
+
+      document
+        .getElementById("overlay")
+        .classList.add("open");
+
+
+      document
+        .getElementById("cart")
+        .classList.add("open");
+
+
+      document.body.classList.add(
+        "no-scroll"
+      );
+
+
+      document
+        .getElementById("cart")
+        .setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+    }
+
+
+    function closeCart() {
+
+      document
+        .getElementById("overlay")
+        .classList.remove("open");
+
+
+      document
+        .getElementById("cart")
+        .classList.remove("open");
+
+
+      document.body.classList.remove(
+        "no-scroll"
+      );
+
+
+      document
+        .getElementById("cart")
+        .setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+    }
+
+
+    /* =====================================================
+       QUICK VIEW
+    ===================================================== */
+
+    function openModal(id) {
+
+      const product =
+        productById(id);
+
+
+      if (!product) {
+        return;
+      }
+
+
+      quickViewId =
+        product.id;
+
+
+      document.getElementById(
+        "modal-image"
+      ).innerHTML =
+        productSVG(product);
+
+
+      document.getElementById(
+        "modal-category"
+      ).textContent =
+        product.category;
+
+
+      document.getElementById(
+        "modal-title"
+      ).textContent =
+        product.name;
+
+
+      document.getElementById(
+        "modal-description"
+      ).textContent =
+        product.description;
+
+
+      document.getElementById(
+        "modal-price"
+      ).textContent =
+        money(product.price);
+
+
+      const button =
+        document.getElementById(
+          "modal-add"
+        );
+
+
+      button.disabled =
+        product.stock <= 0;
+
+
+      button.textContent =
+        product.stock <= 0
+          ? "Sold out"
+          : "Add to cart";
+
+
+      document
+        .getElementById("modal")
+        .classList.add("open");
+
+    }
+
+
+    function closeModal() {
+
+      document
+        .getElementById("modal")
+        .classList.remove("open");
+
+
+      quickViewId = null;
+
+    }
+
+
+    /* =====================================================
+       DELIVERY
+    ===================================================== */
+
+    async function checkDelivery() {
+
+      const input =
+        document.getElementById(
+          "pincode"
+        );
+
+
+      const button =
+        document.getElementById(
+          "delivery-submit"
+        );
+
+
+      const message =
+        document.getElementById(
+          "delivery-message"
+        );
+
+
+      const pincode =
+        input.value.trim();
+
+
+      message.textContent = "";
+
+      message.className =
+        "message";
+
+
+      if (!/^\d{6}$/.test(pincode)) {
+
+        message.textContent =
+          "Enter a valid 6-digit pincode.";
+
+        message.classList.add(
+          "error"
+        );
+
+        input.focus();
+
+        return;
+
+      }
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "Checking…";
+
+
+      try {
+
+        const result =
+          await API.checkPincode(
+            pincode
+          );
+
+
+        if (
+          !result ||
+          result.serviceable === false
+        ) {
+
+          message.textContent =
+            "This pincode is not serviceable.";
+
+          message.classList.add(
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        message.textContent =
+          `Delivery in ${result.days} working days.`;
+
+        message.classList.add(
+          "success"
+        );
+
+      } catch {
+
+        message.textContent =
+          "We couldn't check delivery right now. Please try again.";
+
+        message.classList.add(
+          "error"
+        );
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+          "Check";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       CHECKOUT
+    ===================================================== */
+
+    function checkout() {
+
+      if (!state.cart.length) {
+
+        toast(
+          "Your cart is empty."
+        );
+
+        return;
+
+      }
+
+
+      document.getElementById(
+        "checkout-items"
+      ).value =
+        JSON.stringify(
+          state.cart.map(item => ({
+            id: Number(item.id),
+            qty: Number(item.qty)
+          }))
+        );
+
+
+      document.getElementById(
+        "checkout-coupon"
+      ).value =
+        state.coupon || "";
+
+
+      document.getElementById(
+        "checkout-form"
+      ).submit();
+
+    }
+
+
+    /* =====================================================
+       CLICK EVENTS
+    ===================================================== */
+
+    document.addEventListener(
+      "click",
+      event => {
+
+
+        const add =
+          event.target.closest(
+            "[data-add]"
+          );
+
+
+        if (add) {
+
+          addToCart(
+            Number(add.dataset.add)
+          );
+
+          return;
+
+        }
+
+
+        const view =
+          event.target.closest(
+            "[data-view]"
+          );
+
+
+        if (view) {
+
+          openModal(
+            Number(view.dataset.view)
+          );
+
+          return;
+
+        }
+
+
+        const category =
+          event.target.closest(
+            "[data-category]"
+          );
+
+
+        if (category) {
+
+          state.category =
+            category.dataset.category;
+
+          renderCategories();
+
+          renderProducts();
+
+          return;
+
+        }
+
+
+        const minus =
+          event.target.closest(
+            "[data-minus]"
+          );
+
+
+        if (minus) {
+
+          changeQuantity(
+            Number(minus.dataset.minus),
+            -1
+          );
+
+          return;
+
+        }
+
+
+        const plus =
+          event.target.closest(
+            "[data-plus]"
+          );
+
+
+        if (plus) {
+
+          changeQuantity(
+            Number(plus.dataset.plus),
+            1
+          );
+
+          return;
+
+        }
+
+
+        const remove =
+          event.target.closest(
+            "[data-remove]"
+          );
+
+
+        if (remove) {
+
+          removeFromCart(
+            Number(remove.dataset.remove)
+          );
+
+          return;
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    document
+      .getElementById("search")
+      .addEventListener(
+        "input",
+        event => {
+
+          state.search =
+            event.target.value;
+
+          renderProducts();
+
+        }
+      );
+
+
+    /* =====================================================
+       SORT
+    ===================================================== */
+
+    document
+      .getElementById("sort")
+      .addEventListener(
+        "change",
+        event => {
+
+          state.sort =
+            event.target.value;
+
+          renderProducts();
+
+        }
+      );
+
+
+    /* =====================================================
+       HEADER SEARCH
+    ===================================================== */
+
+    document
+      .getElementById("search-button")
+      .addEventListener(
+        "click",
+        () => {
+
+          document
+            .getElementById("shop")
+            .scrollIntoView({
+              behavior: "smooth"
+            });
+
+
+          setTimeout(
+            () =>
+              document
+                .getElementById("search")
+                .focus(),
+            300
+          );
+
+        }
+      );
+
+
+    /* =====================================================
+       CART
+    ===================================================== */
+
+    document
+      .getElementById("cart-button")
+      .addEventListener(
+        "click",
+        openCart
+      );
+
+
+    document
+      .getElementById("close-cart")
+      .addEventListener(
+        "click",
+        closeCart
+      );
+
+
+    document
+      .getElementById("overlay")
+      .addEventListener(
+        "click",
+        closeCart
+      );
+
+
+    /* =====================================================
+       CART DYNAMIC EVENTS
+    ===================================================== */
+
+    document
+      .getElementById("cart-footer")
+      .addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target.id ===
+            "apply-coupon"
+          ) {
+
+            applyCoupon();
+
+            return;
+
+          }
+
+
+          if (
+            event.target.id ===
+            "checkout"
+          ) {
+
+            checkout();
+
+            return;
+
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById("cart-body")
+      .addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target.id ===
+            "cart-shop"
+          ) {
+
+            closeCart();
+
+            document
+              .getElementById("shop")
+              .scrollIntoView({
+                behavior: "smooth"
+              });
+
+          }
+
+        }
+      );
+
+
+    /* =====================================================
+       DELIVERY
+    ===================================================== */
+
+    document
+      .getElementById("delivery-form")
+      .addEventListener(
+        "submit",
+        event => {
+
+          event.preventDefault();
+
+          checkDelivery();
+
+        }
+      );
+
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    document
+      .getElementById("close-modal")
+      .addEventListener(
+        "click",
+        closeModal
+      );
+
+
+    document
+      .getElementById("modal")
+      .addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target.id ===
+            "modal"
+          ) {
+
+            closeModal();
+
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById("modal-add")
+      .addEventListener(
+        "click",
+        () => {
+
+          if (quickViewId) {
+
+            addToCart(
+              quickViewId
+            );
+
+            closeModal();
+
+          }
+
+        }
+      );
+
+
+    /* =====================================================
+       NEWSLETTER
+    ===================================================== */
+
+    document
+      .getElementById("newsletter-form")
+      .addEventListener(
+        "submit",
+        event => {
+
+          event.preventDefault();
+
+          const email =
+            document.getElementById(
+              "email"
+            );
+
+
+          const message =
+            document.getElementById(
+              "newsletter-message"
+            );
+
+
+          if (!email.validity.valid) {
+
+            message.textContent =
+              "Enter a valid email address.";
+
+            message.className =
+              "container message error";
+
+            return;
+
+          }
+
+
+          message.textContent =
+            "Thanks for subscribing.";
+
+          message.className =
+            "container message success";
+
+
+          email.value = "";
+
+        }
+      );
+
+
+    /* =====================================================
+       ESCAPE
+    ===================================================== */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Escape") {
+
+          closeCart();
+
+          closeModal();
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    renderCategories();
+
+    renderProducts();
+
+    renderCart();
+
+    updateCartCount();
+
+  </script>
+
+</body>
+</html>
